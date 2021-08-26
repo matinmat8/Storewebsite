@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product
+from .models import Product, ProductsImage
 
 
 @admin.register(Product)
@@ -8,3 +8,9 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ('title', 'description', 'category', 'brand', 'slug')
     list_filter = ('brand', 'category')
     prepopulated_fields = {'slug': ('title', 'brand', 'category')}
+
+
+@admin.register(ProductsImage)
+class ProductsImage(admin.ModelAdmin):
+    list_display = ('product', 'image')
+    search_fields = ('product',)
