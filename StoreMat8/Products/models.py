@@ -17,6 +17,7 @@ class Product(models.Model):
     discount_price = models.FloatField(blank=True)
     category = models.CharField(max_length=50)
     brand = models.CharField(max_length=10, choices=STATUS_CHOICES)
+    image = models.CharField(max_length=300)  # Product cover image url
     slug = models.SlugField()
 
     def __str__(self):
