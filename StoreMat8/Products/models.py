@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 # Create your models here.
@@ -30,3 +31,19 @@ class ProductsImage(models.Model):
 
     def __str__(self):
         return f'{self.product, self.image}'
+
+
+class OrderItem(models.Model):
+    item = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_item')
+    quantity = models.PositiveIntegerField()
+
+
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    items = models.ManyToManyField(OrderItem)
+    start_date = models.DateTimeField(auto_now_add=True)
+    ordered_date = models.DateTimeField()
+    ordered = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.user.username
