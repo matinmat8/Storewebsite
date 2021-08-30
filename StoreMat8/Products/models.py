@@ -34,8 +34,11 @@ class ProductsImage(models.Model):
 
 
 class OrderItem(models.Model):
-    item = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_item')
-    quantity = models.PositiveIntegerField()
+    user = models.ForeignKey(User,
+                             on_delete=models.CASCADE)
+    ordered = models.BooleanField(default=False)
+    item = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
 
 
 class Order(models.Model):
