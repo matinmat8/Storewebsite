@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
-
-# Create your models here.
+from django.urls import reverse
 
 STATUS_CHOICES = (
     ('Samsung', 'samsung'),
@@ -23,6 +22,11 @@ class Product(models.Model):
 
     def __str__(self):
         return f"{self.title}"
+
+    def get_absolute_url(self):
+        return reverse("Products:detail", kwargs={
+            'slug': self.slug
+        })
 
 
 class ProductsImage(models.Model):
