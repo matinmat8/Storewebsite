@@ -53,6 +53,33 @@ def add_to_cart(request, slug):
         return redirect("Products:index", slug=slug)
 
 
+def remove_an_item_from_cart(request, slug):
+    product = get_object_or_404(Product, slug=slug)
+    # Get the imported user cart
+    order_qs = Order.objects.filter(user=request.user, ordered=False)
+    if order_qs.exists():
+        order = order_qs[0]
+        if order.items.filter(item__slug=product.slug).exists():
+            order_item = OrderItem.objects.filter(
+                item=product,
+                user=request.user,
+                ordered=False,
+            )[0]
+            if order_item.quantity > 1:
+                order_item.quantity -= 1
+                order_item.save()
+            else:
+                order.items.remove(order_item)
+            messages.Info(request, "This item quantity was reduced.")
+            return redirect("Products:index")
+        else:
+            messages.Info(request, "This item was not in your cart.")
+            return redirect("Products:index", slug=slug)
+    else:
+        messages.Info(request, "This item was not in your cart.")
+        return redirect("Products:index", slug=slug)
+
+
 class OrderSummaryView(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         try:
