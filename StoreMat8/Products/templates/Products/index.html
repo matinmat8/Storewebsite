@@ -1,0 +1,15 @@
+{% for product in products %}
+    <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+    <p>{{ product.description }}</p>
+    <del>{{ product.price }}</del>
+    <p>{{ product.discount_price }}</p>
+    <br>
+    <br>
+    <br>
+    <img src="{{ product.image }}">
+    <hr>
+    <form action="{% url 'Products:add-to-cart' slug=product.slug %}">
+        <button type="submit">add-to-cart</button>
+    </form>
+
+{% endfor %}
