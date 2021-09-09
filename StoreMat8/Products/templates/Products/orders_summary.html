@@ -1,0 +1,6 @@
+{% for order_item in object.items.all %}
+  <img style="width:100px; height:100px" src="{{ order_item.item.image }}">
+  {{ order_item.item.price }}
+  {{ order_item.quantity }}
+  <a href="{% url 'Products:remove-an-item' order_item.item.slug %}">remove-an-item</a>
+{% endfor %}

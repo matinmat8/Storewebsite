@@ -1,4 +1,6 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.checks import messages
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.views import View
@@ -20,6 +22,7 @@ def add_to_cart(request, slug):
         user=request.user,
         ordered=False
     )
+    # Get the imported user cart
     order_qs = Order.objects.filter(user=request.user, ordered=False)
     if order_qs.exists():
         order = order_qs[0]
@@ -42,3 +45,15 @@ def add_to_cart(request, slug):
         messages.Info(request, "This item was added to your cart.")
         return redirect("Products:index", slug=slug)
 
+
+class OrderSummaryView(LoginRequiredMixin, View):
+    def get(self, *args, **kwargs):
+        try:
+            order = Order.objects.get(user=self.request.user, ordered=False)
+            context = {
+                'object': order
+            }
+            return render(self.request, 'Products/orders_summary.html', context)
+        except ObjectDoesNotExist:
+            messages.Warning(self.request, "You do not have an active order")
+            return redirect("Products:index")
