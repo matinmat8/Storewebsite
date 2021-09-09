@@ -4,6 +4,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.views import View
+from django.views.generic.detail import DetailView
+
 from .models import Product, OrderItem, Order
 
 
@@ -13,6 +15,11 @@ class index(View):
     def get(self, request):
         products = Product.objects.all()
         return render(request, 'Products/index.html', context={'products': products})
+
+
+class DetailProduct(DetailView):
+
+    model = Product
 
 
 def add_to_cart(request, slug):
