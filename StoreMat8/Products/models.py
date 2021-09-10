@@ -28,6 +28,11 @@ class Product(models.Model):
             'slug': self.slug
         })
 
+    def remove_from_cart_url(self):
+        return reverse("Products:remove-from-cart", kwargs={
+            'slug': self.slug
+        })
+
 
 class ProductsImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_image')
