@@ -1,6 +1,6 @@
-{% for product in products %}
+{% for product in object_list %}
     <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
-    <p>{{ product.description }}</p>
+    <p>{{ object.description }}</p>
     <del>{{ product.price }}</del>
     <p>{{ product.discount_price }}</p>
     <br>
