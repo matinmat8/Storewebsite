@@ -2,5 +2,9 @@
   <img style="width:100px; height:100px" src="{{ order_item.item.image }}">
   {{ order_item.item.price }}
   {{ order_item.quantity }}
-  <a href="{% url 'Products:remove-an-item' order_item.item.slug %}">remove-an-item</a>
+  <a href="{% url 'Products:remove-an-item' order_item.item.slug %}">Decrease the number /</a>
+  <a href="{% url 'Products:remove-from-cart' order_item.item.slug %}">remove</a>
+{% empty %}
+  <P>There is nothing in your cart!</P>
+  <a href="{% url 'Products:index' %}">you can see the products here!</a>
 {% endfor %}
