@@ -51,6 +51,31 @@ def add_to_cart(request, slug):
         return redirect("Products:order_summery", slug=slug)
 
 
+def remove_from_cart(request, slug):
+    product = get_object_or_404(Product, slug=slug)
+    # Get the imported user cart
+    order_qs = Order.objects.filter(user=request.user, ordered=False)
+    if order_qs.exists():
+        order = order_qs[0]
+        # check if the order item is in the order
+        if order.items.filter(item__slug=product.slug).exists():
+            order_item = OrderItem.objects.filter(
+                item=product,
+                user=request.user,
+                ordered=False,
+            )[0]
+            order.items.remove(order_item)
+            order_item.delete()
+            messages.Info(request, "This product was removed from your cart!")
+            return redirect("Products:order_summery")
+        else:
+            messages.Info(request, "this product was not in your cart.")
+            return redirect("Products:index")
+    else:
+        messages.Info(request, "You don't have a cart!")
+        return redirect("Products:index")  # Redirect to registration page in the future
+
+
 def remove_an_item_from_cart(request, slug):
     product = get_object_or_404(Product, slug=slug)
     # Get the imported user cart
