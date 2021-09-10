@@ -36,11 +36,11 @@ def add_to_cart(request, slug):
             order_item.quantity += 1
             order_item.save()
             messages.Info(request, 'This item quantity was updated.')
-            return redirect("Products:index")
+            return redirect("Products:order_summery")
         else:
             order.items.add(order_item)
             messages.Info(request, "this item was added to your cart")
-            return redirect("Products:index")
+            return redirect("Products:order_summery")
     else:
         ordered_date = timezone.now()
         order = Order.objects.create(
@@ -48,7 +48,7 @@ def add_to_cart(request, slug):
         )
         order.items.add(order_item)
         messages.Info(request, "This item was added to your cart.")
-        return redirect("Products:index", slug=slug)
+        return redirect("Products:order_summery", slug=slug)
 
 
 def remove_an_item_from_cart(request, slug):
@@ -69,13 +69,13 @@ def remove_an_item_from_cart(request, slug):
             else:
                 order.items.remove(order_item)
             messages.Info(request, "This item quantity was reduced.")
-            return redirect("Products:index")
+            return redirect("Products:order_summery")
         else:
             messages.Info(request, "This item was not in your cart.")
-            return redirect("Products:index", slug=slug)
+            return redirect("Products:order_summery", slug=slug)
     else:
         messages.Info(request, "This item was not in your cart.")
-        return redirect("Products:index", slug=slug)
+        return redirect("Products:order_summery", slug=slug)
 
 
 class OrderSummaryView(LoginRequiredMixin, View):
