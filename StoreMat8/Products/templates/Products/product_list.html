@@ -1,3 +1,9 @@
+{% load cart_counter_template_tag %}
+
+{% if request.user.is_authenticated %}
+    <p>{{ request.user|cart_product_counter }}</p>
+{% endif %}
+
 {% for product in object_list %}
     <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
     <p>{{ object.description }}</p>
