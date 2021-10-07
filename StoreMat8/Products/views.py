@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+# from django.contrib.postgres.search import SearchVector, SearchQuery
 from django.core.checks import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, get_object_or_404, redirect
@@ -6,6 +7,8 @@ from django.utils import timezone
 from django.views import View
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
+from django.views.generic.base import TemplateResponseMixin, ContextMixin, View, TemplateView
+from .forms import SearchForm
 
 from .models import Product, OrderItem, Order
 
@@ -14,6 +17,11 @@ from .models import Product, OrderItem, Order
 class ProductList(ListView):
     model = Product
     paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super(ProductList, self).get_context_data(**kwargs)
+        context['form'] = SearchForm()
+        return context
 
 
 class DetailProduct(DetailView):
@@ -114,3 +122,20 @@ class OrderSummaryView(LoginRequiredMixin, View):
         except ObjectDoesNotExist:
             messages.Warning(self.request, "You do not have an active order")
             return redirect("Products:index")
+
+
+class SearchProduct(View):
+    form_class = SearchForm
+    results = []
+    # template_name = "search.html"
+    search = None
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(request.GET)
+        if form.is_valid():
+            self.search = form.cleaned_data['search']
+            self.results = Product.objects.filter(title=self.search)
+
+        return render(request, 'Products/product_list.html', {'form': form, 'results': self.results, 'search': self.search})
+
+
