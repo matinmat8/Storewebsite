@@ -17,6 +17,7 @@ from .models import Product, OrderItem, Order
 class ProductList(ListView):
     model = Product
     paginate_by = 10
+    context_object_name = 'object_list'
 
     def get_context_data(self, **kwargs):
         context = super(ProductList, self).get_context_data(**kwargs)
