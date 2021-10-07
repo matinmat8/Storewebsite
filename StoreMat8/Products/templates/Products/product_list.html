@@ -2,7 +2,21 @@
 
 {% if request.user.is_authenticated %}
     <p>{{ request.user|cart_product_counter }}</p>
+    <p>{{ user.get_username }}</p>
 {% endif %}
+
+<form method='GET' name="search" action="{% url 'Products:search' %}">
+    {{ form.as_p }}
+    {% csrf_token %}
+    <input class="button" type='submit'>
+</form>
+
+{% if search %}
+    {% for post in results %}
+        {{ post.title }}
+    {% endfor %}
+{% endif %}
+
 
 {% for product in object_list %}
     <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
