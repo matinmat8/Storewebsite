@@ -86,31 +86,32 @@ class RemoveFromCart(View):
             return redirect("Products:index")  # Redirect to registration page in the future
 
 
-def remove_an_item_from_cart(request, slug):
-    product = get_object_or_404(Product, slug=slug)
-    # Get the imported user cart
-    order_qs = Order.objects.filter(user=request.user, ordered=False)
-    if order_qs.exists():
-        order = order_qs[0]
-        if order.items.filter(item__slug=product.slug).exists():
-            order_item = OrderItem.objects.filter(
-                item=product,
-                user=request.user,
-                ordered=False,
-            )[0]
-            if order_item.quantity > 1:
-                order_item.quantity -= 1
-                order_item.save()
+class RemoveAnItemFromCart(View):
+    def get(self, request, *args, **kwargs):
+        product = get_object_or_404(Product, slug=self.kwargs['slug'])
+        # Get the imported user cart
+        order_qs = Order.objects.filter(user=request.user, ordered=False)
+        if order_qs.exists():
+            order = order_qs[0]
+            if order.items.filter(item__slug=product.slug).exists():
+                order_item = OrderItem.objects.filter(
+                    item=product,
+                    user=request.user,
+                    ordered=False,
+                )[0]
+                if order_item.quantity > 1:
+                    order_item.quantity -= 1
+                    order_item.save()
+                else:
+                    order.items.remove(order_item)
+                messages.Info(request, "This item quantity was reduced.")
+                return redirect("Products:order_summery")
             else:
-                order.items.remove(order_item)
-            messages.Info(request, "This item quantity was reduced.")
-            return redirect("Products:order_summery")
+                messages.Info(request, "This item was not in your cart.")
+                return redirect("Products:order_summery", slug=self.kwargs['slug'])
         else:
             messages.Info(request, "This item was not in your cart.")
-            return redirect("Products:order_summery", slug=slug)
-    else:
-        messages.Info(request, "This item was not in your cart.")
-        return redirect("Products:order_summery", slug=slug)
+            return redirect("Products:order_summery", slug=self.kwargs['slug'])
 
 
 class OrderSummaryView(LoginRequiredMixin, View):
