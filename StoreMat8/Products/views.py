@@ -28,35 +28,36 @@ class DetailProduct(DetailView):
     model = Product
 
 
-def add_to_cart(request, slug):
-    product = get_object_or_404(Product, slug=slug)
-    order_item, created = OrderItem.objects.get_or_create(
-        item=product,
-        user=request.user,
-        ordered=False
-    )
-    # Get the imported user cart
-    order_qs = Order.objects.filter(user=request.user, ordered=False)
-    if order_qs.exists():
-        order = order_qs[0]
-        # Check if the order item in in order
-        if order.items.filter(item__slug=product.slug).exists():
-            order_item.quantity += 1
-            order_item.save()
-            messages.Info(request, 'This item quantity was updated.')
-            return redirect("Products:order_summery")
-        else:
-            order.items.add(order_item)
-            messages.Info(request, "this item was added to your cart")
-            return redirect("Products:order_summery")
-    else:
-        ordered_date = timezone.now()
-        order = Order.objects.create(
-            user=request.user, ordered_date=ordered_date
+class AddToCart(View):
+    def get(self, request, *args, **kwargs):
+        product = get_object_or_404(Product, slug=self.kwargs['slug'])
+        order_item, created = OrderItem.objects.get_or_create(
+            item=product,
+            user=self.request.user,
+            ordered=False
         )
-        order.items.add(order_item)
-        messages.Info(request, "This item was added to your cart.")
-        return redirect("Products:order_summery", slug=slug)
+        # Get the imported user cart
+        order_qs = Order.objects.filter(user=request.user, ordered=False)
+        if order_qs.exists():
+            order = order_qs[0]
+            # Check if the order item in in order
+            if order.items.filter(item__slug=product.slug).exists():
+                order_item.quantity += 1
+                order_item.save()
+                messages.Info(request, 'This item quantity was updated.')
+                return redirect("Products:order_summery")
+            else:
+                order.items.add(order_item)
+                messages.Info(request, "this item was added to your cart")
+                return redirect("Products:order_summery")
+        else:
+            ordered_date = timezone.now()
+            order = Order.objects.create(
+                user=request.user, ordered_date=ordered_date
+            )
+            order.items.add(order_item)
+            messages.Info(request, "This item was added to your cart.")
+            return redirect("Products:order_summery", slug=self.kwargs['slug'])
 
 
 def remove_from_cart(request, slug):
