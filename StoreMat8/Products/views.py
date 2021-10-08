@@ -30,7 +30,7 @@ class DetailProduct(DetailView):
 
 
 class AddToCart(View):
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         product = get_object_or_404(Product, slug=self.kwargs['slug'])
         order_item, created = OrderItem.objects.get_or_create(
             item=product,
@@ -62,7 +62,7 @@ class AddToCart(View):
 
 
 class RemoveFromCart(View):
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         product = get_object_or_404(Product, slug=self.kwargs['slug'])
         # Get the imported user cart
         order_qs = Order.objects.filter(user=request.user, ordered=False)
@@ -88,7 +88,7 @@ class RemoveFromCart(View):
 
 
 class RemoveAnItemFromCart(View):
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         product = get_object_or_404(Product, slug=self.kwargs['slug'])
         # Get the imported user cart
         order_qs = Order.objects.filter(user=request.user, ordered=False)
@@ -116,7 +116,7 @@ class RemoveAnItemFromCart(View):
 
 
 class OrderSummaryView(LoginRequiredMixin, View):
-    def get(self, *args, **kwargs):
+    def get(self):
         try:
             order = Order.objects.get(user=self.request.user, ordered=False)
             context = {
@@ -134,7 +134,7 @@ class SearchProduct(View):
     # template_name = "search.html"
     search = None
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         form = self.form_class(request.GET)
         if form.is_valid():
             self.search = form.cleaned_data['search']
