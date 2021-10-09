@@ -28,6 +28,12 @@ class ProductList(ListView):
 class DetailProduct(DetailView):
     model = Product
 
+    # Show related products
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['product_list'] = Product.objects.filter(category=self.kwargs['category'])[:10]
+        return context
+
 
 class AddToCart(View):
     def get(self, request):
