@@ -25,7 +25,7 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return reverse("Products:detail", kwargs={
-            'slug': self.slug
+            'slug': self.slug, 'category': self.category,
         })
 
     def remove_from_cart_url(self):
