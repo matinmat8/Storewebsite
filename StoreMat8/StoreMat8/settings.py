@@ -78,10 +78,13 @@ WSGI_APPLICATION = 'StoreMat8.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+   'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'storemat8',
+        'USER': 'newuser',
+        'PASSWORD': 'MatinMat8',
+        'HOST': 'localhost',
+   }
 }
 
 
