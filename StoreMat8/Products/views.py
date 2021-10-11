@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-# from django.contrib.postgres.search import SearchVector, SearchQuery
+from django.contrib.postgres.search import SearchVector, SearchQuery
 from django.core.checks import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, get_object_or_404, redirect
@@ -142,11 +142,15 @@ class SearchProduct(View):
     search = None
 
     def get(self, request):
+        post = Product.objects.all()
         form = self.form_class(request.GET)
         if form.is_valid():
             self.search = form.cleaned_data['search']
-            self.results = Product.objects.filter(title=self.search)
+            # self.results = Product.objects.filter(title=self.search)
+            self.results = post.annotate(search=SearchVector('title', 'description', 'category'
+                                                             ),).filter(search=SearchQuery(self.search))
 
-        return render(request, 'Products/product_list.html', {'form': form, 'results': self.results, 'search': self.search})
+        return render(request, 'Products/product_list.html',
+                      {'form': form, 'results': self.results, 'search': self.search})
 
 
