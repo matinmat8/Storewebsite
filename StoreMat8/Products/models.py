@@ -19,6 +19,10 @@ class Product(models.Model):
     brand = models.CharField(max_length=10, choices=STATUS_CHOICES)
     image = models.CharField(max_length=300)  # Product cover image url
     slug = models.SlugField()
+    order_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-order_date']
 
     def __str__(self):
         return f"{self.title}"
