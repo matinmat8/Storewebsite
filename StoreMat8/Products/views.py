@@ -19,6 +19,7 @@ class ProductList(ListView):
     paginate_by = 10
     context_object_name = 'object_list'
 
+    # Handle the search form
     def get_context_data(self, **kwargs):
         context = super(ProductList, self).get_context_data(**kwargs)
         context['form'] = SearchForm()
