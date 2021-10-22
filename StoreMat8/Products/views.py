@@ -37,7 +37,7 @@ class DetailProduct(DetailView):
 
 
 class AddToCart(View):
-    def get(self, request):
+    def get(self, request, slug):
         product = get_object_or_404(Product, slug=self.kwargs['slug'])
         order_item, created = OrderItem.objects.get_or_create(
             item=product,
@@ -69,7 +69,7 @@ class AddToCart(View):
 
 
 class RemoveFromCart(View):
-    def get(self, request):
+    def get(self, request, slug):
         product = get_object_or_404(Product, slug=self.kwargs['slug'])
         # Get the imported user cart
         order_qs = Order.objects.filter(user=request.user, ordered=False)
@@ -95,7 +95,7 @@ class RemoveFromCart(View):
 
 
 class RemoveAnItemFromCart(View):
-    def get(self, request):
+    def get(self, request, slug):
         product = get_object_or_404(Product, slug=self.kwargs['slug'])
         # Get the imported user cart
         order_qs = Order.objects.filter(user=request.user, ordered=False)
@@ -123,7 +123,7 @@ class RemoveAnItemFromCart(View):
 
 
 class OrderSummaryView(LoginRequiredMixin, View):
-    def get(self):
+    def get(self, request):
         try:
             order = Order.objects.get(user=self.request.user, ordered=False)
             context = {
