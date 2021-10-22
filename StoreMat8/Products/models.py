@@ -37,6 +37,11 @@ class Product(models.Model):
             'slug': self.slug
         })
 
+    def add_to_cart_url(self):
+        return reverse("Products:add-to-cart", kwargs={
+            'slug': self.slug
+        })
+
 
 class ProductsImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_image')
