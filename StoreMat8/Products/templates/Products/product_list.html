@@ -19,17 +19,16 @@
 
 
 {% for product in object_list %}
-    <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
-    <p>{{ object.description }}</p>
-    <del>{{ product.price }}</del>
-    <p>{{ product.discount_price }}</p>
-    <br>
-    <br>
-    <br>
-    <img src="{{ product.image }}">
-    <hr>
-    <form action="{% url 'Products:add-to-cart' slug=product.slug %}">
-        <button type="submit">add-to-cart</button>
-    </form>
-
+    <div>
+        <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+        <p>{{ object.description }}</p>
+        <del>{{ product.price }}</del>
+        <p>{{ product.discount_price }}</p>
+        <br>
+        <br>
+        <br>
+        <img src="{{ product.image }}">
+        <hr>
+        <a href="{{ product.add_to_cart_url }}">ADD TO CART</a>
+    </div>
 {% endfor %}
