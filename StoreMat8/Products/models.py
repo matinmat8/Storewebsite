@@ -92,6 +92,15 @@ class Order(models.Model):
             total += order_item.final_price()
         return total
 
+    @classmethod
+    def total_saved_amount(cls, request):
+        total = 0
+        o = Order.objects.get(user=request.user)
+        order = o.items.all()
+        for order_item in order:
+            total += order_item.saved_amount()
+        return total
+
 
 class DiscountSystem(models.Model):
     discount_is_for = models.ForeignKey(User, on_delete=models.CASCADE)
