@@ -8,9 +8,9 @@ from django.views import View
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.base import TemplateResponseMixin, ContextMixin, View, TemplateView
-from .forms import SearchForm
+from .forms import SearchForm, DiscountCode
 
-from .models import Product, OrderItem, Order
+from .models import Product, OrderItem, Order, DiscountSystem
 
 
 # Show all the products
@@ -123,16 +123,37 @@ class RemoveAnItemFromCart(View):
 
 
 class OrderSummaryView(LoginRequiredMixin, View):
+    form_class = DiscountCode()
+
     def get(self, request):
+        form = self.form_class
         try:
             order = Order.objects.get(user=self.request.user, ordered=False)
             context = {
-                'object': order
+                'object': order,
+                'form': form,
             }
             return render(self.request, 'Products/orders_summary.html', context)
         except ObjectDoesNotExist:
             messages.Warning(self.request, "You do not have an active order")
             return redirect("Products:index")
+
+    def post(self, request, **kwargs):
+        form = DiscountCode(request.POST)
+        order_item = OrderItem.objects.all().filter(user=request.user)
+        if form.is_valid():
+            dis = form.cleaned_data['discount_code']
+            try:
+                discount_object = DiscountSystem.objects.get(discount_is_for=request.user, discount_code=dis)
+                # final_price = GetPrice().get_final(request)
+                final_price = Order.get_final(request)
+                discount_percent = discount_object.discount_percent
+                percent = discount_percent / 100 * final_price
+                final_price -= percent
+                return render(self.request, 'Products/orders_summary.html', {'final_price': final_price})
+            except ObjectDoesNotExist:
+                messages.Warning(self.request, "you don't have discount code!")
+                return redirect("Products:order_summery")
 
 
 class SearchProduct(View):
