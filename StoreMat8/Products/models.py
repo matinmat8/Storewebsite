@@ -83,8 +83,11 @@ class Order(models.Model):
     def __str__(self):
         return self.user.username
 
-    def get_final(self):
+    @classmethod
+    def get_final(cls, request):
         total = 0
-        for order_item in self.items.all():
+        o = Order.objects.get(user=request.user)
+        order = o.items.all()
+        for order_item in order:
             total += order_item.final_price()
         return total
