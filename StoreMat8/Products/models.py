@@ -91,3 +91,12 @@ class Order(models.Model):
         for order_item in order:
             total += order_item.final_price()
         return total
+
+
+class DiscountSystem(models.Model):
+    discount_is_for = models.ForeignKey(User, on_delete=models.CASCADE)
+    discount_code = models.CharField(max_length=50)
+    discount_percent = models.FloatField()
+
+    def __str__(self):
+        return self.discount_is_for.username
