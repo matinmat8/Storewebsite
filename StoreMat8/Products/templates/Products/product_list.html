@@ -1,9 +1,15 @@
 {% load cart_counter_template_tag %}
 
+<a href="{% url 'Products:order_summery' %}">Order summery</a>
+
 {% if request.user.is_authenticated %}
     <p>{{ request.user|cart_product_counter }}</p>
     <p>{{ user.get_username }}</p>
+    <a href="{% url 'register_login:logout' %}">Log out</a>
+{% else %}
+    <a href="{% url 'register_login:login' %}">Login</a>
 {% endif %}
+
 
 <form method='GET' name="search" action="{% url 'Products:search' %}">
     {{ form.as_p }}
@@ -13,7 +19,7 @@
 
 {% if search %}
     {% for post in results %}
-        <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+        <p><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></p>
     {% endfor %}
 {% endif %}
 
@@ -28,7 +34,9 @@
         <br>
         <br>
         <img src="{{ product.image }}">
-        <hr>
+        <br> <br> <br>
         <a href="{{ product.add_to_cart_url }}">ADD TO CART</a>
+        <hr>
     </div>
+        <br>
 {% endfor %}
