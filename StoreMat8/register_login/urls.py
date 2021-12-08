@@ -9,7 +9,8 @@ app_name = 'register_login'
 urlpatterns = [
     # path('', ProductList.as_view(), name='ProductList'),
     path('register/', register, name='register'),
-    path('login/', auth_views.LoginView.as_view(template_name='registration/Login.html', redirect_field_name='index')),
+    path('login/', auth_views.LoginView.as_view(template_name='registration/Login.html', redirect_field_name='index'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(template_name='Products/product_list.html'), name='logout'),
 
     path('reset_password/',
          auth_views.PasswordResetView.as_view(template_name="registration/reset_password.html"),
