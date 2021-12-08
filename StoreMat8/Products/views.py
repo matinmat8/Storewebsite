@@ -141,16 +141,18 @@ class OrderSummaryView(LoginRequiredMixin, View):
     def post(self, request, **kwargs):
         form = DiscountCode(request.POST)
         order_item = OrderItem.objects.all().filter(user=request.user)
+        order = Order.objects.get(user=self.request.user, ordered=False)
         if form.is_valid():
             dis = form.cleaned_data['discount_code']
+            percent = lambda discount_percent, final_price: discount_percent / 100 * final_price
             try:
                 discount_object = DiscountSystem.objects.get(discount_is_for=request.user, discount_code=dis)
-                # final_price = GetPrice().get_final(request)
                 final_price = Order.get_final(request)
                 discount_percent = discount_object.discount_percent
-                percent = discount_percent / 100 * final_price
+                percent = percent(discount_percent, final_price)
                 final_price -= percent
-                return render(self.request, 'Products/orders_summary.html', {'final_price': final_price})
+                messages.Info(request, "Your discount code worked?")
+                return render(self.request, 'Products/orders_summary.html', {'final_price': final_price, 'percent': percent, 'object': order})
             except ObjectDoesNotExist:
                 messages.Warning(self.request, "you don't have discount code!")
                 return redirect("Products:order_summery")
