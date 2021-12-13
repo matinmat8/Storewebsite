@@ -82,12 +82,12 @@ WSGI_APPLICATION = 'StoreMat8.wsgi.application'
 
 DATABASES = {
    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'storemat8',
-        'USER': 'newuser',
-        'PASSWORD': 'MatinMat8',
-        'HOST': 'localhost',
-   }
+         'ENGINE': 'django.db.backends.postgresql',
+         'NAME': 'mystoredb',
+         'USER': 'storemat8user',
+         'PASSWORD': 'MatinMat8',
+         'HOST': 'localhost',
+    }
 }
 
 
