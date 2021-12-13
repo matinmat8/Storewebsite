@@ -41,6 +41,9 @@ INSTALLED_APPS = [
 
     # My apps
     'Products',
+
+    # Third party apps
+    'bootstrap5',
 ]
 
 MIDDLEWARE = [
