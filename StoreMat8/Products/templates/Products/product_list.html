@@ -28,7 +28,7 @@
     <div class="mt-3">
         <a class="link-dark" href="{{ product.get_absolute_url }}"><h4>{{ product.title }}</h4></a>
         <img src="{{ product.image }}">
-        <p class="leader">{{ product.description }}</p>
+        <p class="leader">{{ product.description|truncatewords:75 }}</p>
         <del>{{ product.price }}</del>
         <p>{{ product.discount_price }}</p>
         <a href="{{ product.add_to_cart_url }}"><button class="btn btn-dark btn-sm">ADD TO CART</button></a>
