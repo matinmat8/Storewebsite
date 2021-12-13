@@ -106,6 +106,7 @@ class DiscountSystem(models.Model):
     discount_is_for = models.ForeignKey(User, on_delete=models.CASCADE)
     discount_code = models.CharField(max_length=50)
     discount_percent = models.FloatField()
+    due_date = models.DateField()
 
     def __str__(self):
         return self.discount_is_for.username

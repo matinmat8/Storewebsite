@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from django.core.checks import messages
@@ -146,13 +148,19 @@ class OrderSummaryView(LoginRequiredMixin, View):
             percent = lambda discount_percent, final_price: discount_percent / 100 * final_price
             try:
                 discount_object = DiscountSystem.objects.get(discount_is_for=request.user, discount_code=dis)
-                final_price = Order.get_final(request)
-                discount_percent = discount_object.discount_percent
-                percent = percent(discount_percent, final_price)
-                final_price -= percent
-                messages.Info(request, "Your discount code worked?")
-                return render(self.request, 'Products/orders_summary.html',
-                              {'final_price': final_price, 'percent': percent, 'object': order})
+                today = datetime.date.today()
+                # Handle discount code with date
+                if discount_object.due_date > today:
+                    final_price = Order.get_final(request)
+                    discount_percent = discount_object.discount_percent
+                    percent = percent(discount_percent, final_price)
+                    final_price -= percent
+                    messages.Info(request, "Your discount code worked?")
+                    return render(self.request, 'Products/orders_summary.html',
+                                  {'final_price': final_price, 'percent': percent, 'object': order})
+                else:
+                    return render(self.request, 'Products/orders_summary.html',
+                                  {'percent': percent, 'object': order})
             except ObjectDoesNotExist:
                 messages.Warning(self.request, "you don't have discount code!")
                 return redirect("Products:order_summery")
