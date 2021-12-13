@@ -1,20 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h1>Log in</h1>
+{% extends 'Products/base.html' %}
 
+{% block title %}Login{% endblock %}
+
+{% block header %}
+<h1>Log in</h1>
+{% endblock %}
+
+{% block content %}
   <div class="form-group">
     <form method="post" class="center">
       {% csrf_token %}
       {{ form.as_p }}
-      <button type="submit" class="btn btn-primary  btn-lg" >Login</button>
-      <p>Don't have an account? Create One <a href="{% url 'Products:index' %}"> here </a></p>
+      <button type="submit" class="btn btn-dark btn-sm" >Login</button>
+      <p>Don't have an account? Create One <a href="{% url 'register_login:register' %}"> here </a></p>
       <p><a href="{% url 'register_login:reset_password' %}"> do you forgot password? </a></p>
     </form>
   </div>
-</body>
-</html>
+{% endblock %}

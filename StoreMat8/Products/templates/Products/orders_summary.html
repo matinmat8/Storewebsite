@@ -41,7 +41,7 @@
 <form method='POST' action="{% url 'Products:order_summery' %}">
     {{ form.as_p }}
     {% csrf_token %}
-    <input class="button" type='submit'>
+    <button class="btn btn-dark btn-sm" type='submit'>Send</button>
 </form>
 
 {% endblock %}

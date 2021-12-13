@@ -5,11 +5,11 @@
 
 {% block header %}
 
-<button class="btn btn-dark mt-3" id="show_search" onclick="ShowForm()">Search</button>
+<button class="btn btn-dark btn-sm mt-3" id="show_search" onclick="ShowForm()">Search</button>
 <form class="mt-3" method='GET' id="search_form" style="display:none;" name="search" action="{% url 'Products:search' %}">
     {{ form.as_p }}
     {% csrf_token %}
-    <input id="btn-send" class="btn btn-dark" type='submit'>
+    <button id="btn-send" class="btn btn-dark btn-sm" type='submit'>Search</button>
 </form>
 
 {% endblock %}
@@ -31,7 +31,7 @@
         <p class="leader">{{ product.description }}</p>
         <del>{{ product.price }}</del>
         <p>{{ product.discount_price }}</p>
-        <a href="{{ product.add_to_cart_url }}">ADD TO CART</a>
+        <a href="{{ product.add_to_cart_url }}"><button class="btn btn-dark btn-sm">ADD TO CART</button></a>
         <hr>
     </div>
 {% endfor %}
