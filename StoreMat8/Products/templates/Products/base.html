@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% load bootstrap5 %}
+{% load cart_counter_template_tag %}
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Title{% endblock %}</title>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+    <!-- Fengyuan Chen's Datepicker -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.css" integrity="sha256-b88RdwbRJEzRx95nCuuva+hO5ExvXXnpX+78h8DjyOE=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.js" integrity="sha256-/7FLTdzP6CfC1VBAj/rsp3Rinuuu9leMRGd354hvk0k=" crossorigin="anonymous"></script>
+
+    {% bootstrap_css %}
+</head>
+<body>
+   <div class="container-sm">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'Products:index' %}">StoreMat8</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse">
+          <div class="navbar-nav">
+            <a class="nav-link active" aria-current="page" href="{% url 'Products:index' %}">Products</a>
+          </div>
+        </div>
+      </div>
+      <div class="container-fluid">
+        <div class="d-flex">
+            {% if user.is_authenticated %}
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+              <div class="navbar-nav">
+                <a class="nav-link" style="margin-left: 300px" href="{% url 'Products:order_summery' %}">Cart<p style="display:inline; margin-left:5px;">{{ request.user|cart_product_counter }}</p></a>
+              </div>
+            </div>
+            <div class="container-fluid">
+                <div class="navbar-nav">{{ user.username }}</div>
+                <div class="navbar-nav"><a href="{% url 'register_login:logout' %}">LogOut</a></div>
+            </div>
+            {% else %}
+                <div style="margin-left: 230px">please login</div>
+                <div style="margin-left:10px"><a href="{% url 'register_login:login' %}">Login</a></div>
+            {% endif %}
+        </div>
+      </div>
+
+    </nav>
+  </div>
+    <header>
+        <div class="container-sm mt-3">
+            {% block header %}
+            {% endblock header %}
+        </div>
+    </header>
+
+    <main>
+        <div class="container-sm mt-3">
+            {% block content %}
+            {% endblock content %}
+        </div>
+    </main>
+
+    <footer>
+        <div class="container-sm mt-3">
+            {% block footer %}
+            {% endblock footer %}
+        </div>
+    </footer>
+
+    <script>
+      {% block javascript %}
+      {% endblock javascript %}
+    </script>
+</body>
+</html>

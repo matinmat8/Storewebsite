@@ -1,21 +1,25 @@
+{% extends "Products/base.html" %}
 {% load get_final_price_for_template %}
+
+
+{% block content %}
 {% for order_item in object.items.all %}
   <div>
       <img style="width:100px; height:100px" src="{{ order_item.item.image }}">
-      {{ order_item.item.price }}
-      {{ order_item.item.discount_price }}
-      {{ order_item.quantity }}
+      <p style="display:inline;" class="lead">Price: {{ order_item.item.price }}
+      Discount Price: {{ order_item.item.discount_price }}
+      Quantity: {{ order_item.quantity }}
       {% if order_item.item.discount_price %}
-        {{ order_item.total_discount_price }}
+        Total amount: {{ order_item.total_discount_price }}
         saving ${{ order_item.saved_amount }}
       {% else %}
-          {{ order_item.total_price }}
+          Total amount: {{ order_item.total_price }}
       {% endif %}
-
-
-      <a href="{% url 'Products:remove-an-item' order_item.item.slug %}">Decrease the quantity /</a>
-      <a href="{% url 'Products:remove-from-cart' order_item.item.slug %}">remove /</a>
-      <a href="{% url 'Products:add-to-cart' order_item.item.slug %}">Increase the quantity</a>
+      </p>
+      <br>
+      <a class="link-dark" href="{% url 'Products:remove-an-item' order_item.item.slug %}">Decrease the quantity /</a>
+      <a class="link-dark" href="{% url 'Products:remove-from-cart' order_item.item.slug %}">remove /</a>
+      <a class="link-dark" href="{% url 'Products:add-to-cart' order_item.item.slug %}">Increase the quantity</a>
   </div>
 {% empty %}
   <P>There is nothing in your cart!</P>
@@ -27,11 +31,11 @@
 
 
 {% if final_price %}
-    <P>the percent of discount code => {{ percent }}</P>
-    <P>The discount code worked =>{{ final_price }}</P>
+    <P class="lead">the percent of discount code => {{ percent }}</P>
+    <P class="lead">The discount code worked =>{{ final_price }}</P>
 {% else %}
-    <p>Total saved amount {{ request|get_total_saved_amount }}</p>
-    <p>Total price {{ request|get_final_price }}</p>
+    <p class="lead">Total saved amount {{ request|get_total_saved_amount }}</p>
+    <p class="lead">Total price {{ request|get_final_price }}</p>
 {% endif %}
 
 <form method='POST' action="{% url 'Products:order_summery' %}">
@@ -40,5 +44,4 @@
     <input class="button" type='submit'>
 </form>
 
-
-
+{% endblock %}

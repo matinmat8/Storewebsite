@@ -1,10 +1,21 @@
+{% extends 'Products/base.html' %}
+
+{% block content %}
+<h3>{{ object.title }}</h3>
 <img src="{{ object.image }}">
-<p>{{ object.title }}</p>
 <p>{{ object.description }}</p>
-<p>{{ object.price }}</p>
+<p class="lead">Price: {{ object.price }}</p>
 <p>{{ object.price_discount }}</p>
+{% endblock %}
 
-
+{% block footer %}
+<h5 class="mt-5">Same Products</h5>
+<hr>
 {% for product in product_list %}
-    <a href="{{ product.get_absolute_url }}">{{ product.title }}</a><br/>
+<br>
+    <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+    <p style="display:inline">{{ product.price }}</p>
+    <br/>
+    <img src="{{ product.image }}">
 {% endfor %}
+{% endblock %}

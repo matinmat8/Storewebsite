@@ -1,42 +1,45 @@
+{% extends "Products/base.html" %}
 {% load cart_counter_template_tag %}
 
-<a href="{% url 'Products:order_summery' %}">Order summery</a>
+{% block title %}products{% endblock %}
 
-{% if request.user.is_authenticated %}
-    <p>{{ request.user|cart_product_counter }}</p>
-    <p>{{ user.get_username }}</p>
-    <a href="{% url 'register_login:logout' %}">Log out</a>
-{% else %}
-    <a href="{% url 'register_login:login' %}">Login</a>
-{% endif %}
+{% block header %}
 
-
-<form method='GET' name="search" action="{% url 'Products:search' %}">
+<button class="btn btn-dark mt-3" id="show_search" onclick="ShowForm()">Search</button>
+<form class="mt-3" method='GET' id="search_form" style="display:none;" name="search" action="{% url 'Products:search' %}">
     {{ form.as_p }}
     {% csrf_token %}
-    <input class="button" type='submit'>
+    <input id="btn-send" class="btn btn-dark" type='submit'>
 </form>
 
+{% endblock %}
+
+{% block content %}
 {% if search %}
     {% for post in results %}
-        <p><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></p>
+        <p><a class="link-dark" href="{{ post.get_absolute_url }}">{{ post.title }}</a></p>
+    {% empty %}
+        <p>I couldn't find anything</p>
     {% endfor %}
 {% endif %}
 
 
 {% for product in object_list %}
-    <div>
-        <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
-        <p>{{ object.description }}</p>
+    <div class="mt-3">
+        <a class="link-dark" href="{{ product.get_absolute_url }}"><h4>{{ product.title }}</h4></a>
+        <img src="{{ product.image }}">
+        <p class="leader">{{ product.description }}</p>
         <del>{{ product.price }}</del>
         <p>{{ product.discount_price }}</p>
-        <br>
-        <br>
-        <br>
-        <img src="{{ product.image }}">
-        <br> <br> <br>
         <a href="{{ product.add_to_cart_url }}">ADD TO CART</a>
         <hr>
     </div>
-        <br>
 {% endfor %}
+{% endblock %}
+
+{% block javascript %}
+function ShowForm() {
+    document.getElementById('show_search').style.display='none';
+    document.getElementById('search_form').style.display='block';
+}
+{% endblock %}
