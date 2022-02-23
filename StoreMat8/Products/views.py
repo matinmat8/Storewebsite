@@ -173,13 +173,12 @@ class SearchProduct(View):
     search = None
 
     def get(self, request):
-        post = Product.objects.all()
         form = self.form_class(request.GET)
         if form.is_valid():
             self.search = form.cleaned_data['search']
             vector = SearchVector('title', weight='A') + SearchVector('description', weight='C') + SearchVector('category', weight='B')
             query = SearchQuery(self.search)
-            self.results = post.annotate(search=vector).filter(search=query)
+            self.results = Product.objects.annotate(search=vector).filter(search=query)
 
         return render(request, 'Products/product_list.html',
                       {'form': form, 'results': self.results, 'search': self.search})
