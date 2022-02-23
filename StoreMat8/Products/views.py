@@ -1,11 +1,13 @@
 import datetime
 
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.postgres.search import SearchVector, SearchQuery
 from django.core.checks import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
+from django.utils.decorators import method_decorator
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.base import View
@@ -37,6 +39,7 @@ class DetailProduct(DetailView):
         return context
 
 
+@method_decorator(login_required, name='dispatch')
 class AddToCart(View):
     def get(self, request, slug):
         product = get_object_or_404(Product, slug=self.kwargs['slug'])
@@ -69,6 +72,7 @@ class AddToCart(View):
             return redirect("Products:order_summery", slug=self.kwargs['slug'])
 
 
+@method_decorator(login_required, name='dispatch')
 class RemoveFromCart(View):
     def get(self, request, slug):
         product = get_object_or_404(Product, slug=self.kwargs['slug'])
@@ -95,6 +99,7 @@ class RemoveFromCart(View):
             return redirect("Products:index")  # Redirect to registration page in the future
 
 
+@method_decorator(login_required, name='dispatch')
 class RemoveAnItemFromCart(View):
     def get(self, request, slug):
         product = get_object_or_404(Product, slug=self.kwargs['slug'])
@@ -123,6 +128,7 @@ class RemoveAnItemFromCart(View):
             return redirect("Products:order_summery", slug=self.kwargs['slug'])
 
 
+@method_decorator(login_required, name='dispatch')
 class OrderSummaryView(LoginRequiredMixin, View):
     form_class = DiscountCode()
 
@@ -139,6 +145,7 @@ class OrderSummaryView(LoginRequiredMixin, View):
             messages.Warning(self.request, "You do not have an active order")
             return redirect("Products:index")
 
+    # handle code discounting system
     def post(self, request, **kwargs):
         form = DiscountCode(request.POST)
         order_item = OrderItem.objects.all().filter(user=request.user)
