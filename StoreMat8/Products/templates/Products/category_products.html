@@ -1,0 +1,26 @@
+{% extends "Products/base.html" %}
+{% load cart_counter_template_tag %}
+
+{% block title %}Products{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+
+{% for product in object_list %}
+    <div class="mt-3">
+        <a class="link-dark" href="{{ product.get_absolute_url }}"><h4>{{ product.title }}</h4></a>
+        <img src="{{ category.image }}">
+        <p class="leader">{{ product.description|truncatewords:75 }}</p>
+        <hr>
+    </div>
+{% endfor %}
+{% endblock %}
+
+{% block javascript %}
+function ShowForm() {
+    document.getElementById('show_search').style.display='none';
+    document.getElementById('search_form').style.display='block';
+}
+{% endblock %}
