@@ -10,12 +10,19 @@ STATUS_CHOICES = (
 )
 
 
+# App's major categories
+class Category(models.Model):
+    following_categories = models.ForeignKey('self', on_delete=models.RESTRICT, blank=True, null=True)
+    title = models.CharField(max_length=65)
+    description = models.TextField()
+
+
 class Product(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.RESTRICT)
     title = models.CharField(max_length=65)
     description = models.TextField()
     price = models.FloatField()
     discount_price = models.FloatField(blank=True)
-    category = models.CharField(max_length=50)
     brand = models.CharField(max_length=10, choices=STATUS_CHOICES)
     image = models.CharField(max_length=300)  # Product cover image url
     slug = models.SlugField()
