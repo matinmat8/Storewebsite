@@ -21,6 +21,21 @@ class CategoryPage(ListView):
     model = Category
 
 
+# Showing either Following Categories if any Or Related Products
+class FollowingCategories(View):
+    def get(self, *args, **kwargs):
+        obj = Category.objects.get(pk=kwargs['pk'])
+        try:
+            following_obj = Category.objects.filter(following_categories=obj)
+            if following_obj.exsit():
+                return render(self.request, 'Products/category_list.html', {'object_list': following_obj})
+            else:
+                pass
+        except:
+            category_products = Product.objects.filter(category=obj)
+            return render(self.request, 'Products/category_products.html', {'object_list': category_products})
+
+
 # Show all the products
 class ProductList(ListView):
     model = Product
@@ -40,7 +55,7 @@ class DetailProduct(DetailView):
     # Show related products
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['product_list'] = Product.objects.filter(category=self.kwargs['category'])[:10]
+        context['product_list'] = Product.objects.filter(category=self.kwargs['pk'])[:10]
         return context
 
 
