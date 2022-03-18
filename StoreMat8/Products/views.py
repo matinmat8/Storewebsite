@@ -13,7 +13,12 @@ from django.views.generic.detail import DetailView
 from django.views.generic.base import View
 from .forms import SearchForm, DiscountCode
 
-from .models import Product, OrderItem, Order, DiscountSystem
+from .models import *
+
+
+# Showing all categories
+class CategoryPage(ListView):
+    model = Category
 
 
 # Show all the products
