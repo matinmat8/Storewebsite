@@ -15,6 +15,11 @@ class Category(models.Model):
     following_categories = models.ForeignKey('self', on_delete=models.RESTRICT, blank=True, null=True)
     title = models.CharField(max_length=65)
     description = models.TextField()
+    
+    def get_absolute_url(self):
+        return reverse("Products:FollowingCategories", kwargs={
+            'pk': self.pk,
+        })
 
 
 class Product(models.Model):
@@ -36,7 +41,7 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return reverse("Products:detail", kwargs={
-            'slug': self.slug, 'category': self.category,
+            'slug': self.slug, 'pk': self.category.pk,
         })
 
     def remove_from_cart_url(self):
